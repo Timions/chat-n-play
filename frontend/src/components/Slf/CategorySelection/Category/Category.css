@@ -1,0 +1,23 @@
+.selector-category {
+    margin: 1%;
+    border-radius: 8px;
+}
+
+.selector-category-input {
+    color: black !important;
+    outline: none;
+    text-align: center;
+}
+
+.delete-category-btn {
+    background-color: #474747 !important;
+    color: white !important;
+}
+
+.delete-category-btn:hover {
+    background-color: rgb(116, 116, 116) !important;
+}
+
+.input-group {
+    margin: 0 !important;
+}

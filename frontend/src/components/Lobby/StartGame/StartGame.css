@@ -1,0 +1,72 @@
+.start-game {
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+
+}
+
+.start-game-text {
+    color: #474747;
+    font-size: larger;
+}
+
+.start-game-btn {
+    text-align: center;
+}
+
+.btn-xl {
+    padding: 1.6% 10%;
+    font-size: 2vw;
+    border-radius: 10px;
+}
+
+.speechbubble{
+    height: 100px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media  screen and (min-width: 720px) {
+    #speechbubble-host{
+        height: 150px;
+    }
+    #speechbubble-guest{
+        height: 120px;
+    }
+    
+}
+
+@media  screen and (min-width: 1024px) {
+    #speechbubble-host{
+        height: 180px;
+    }
+    #speechbubble-guest{
+        height: 120px;
+    }
+    
+}
+
+@media  screen and (min-width: 1200px) {
+    #speechbubble-host{
+        height: 180px;
+    }
+    #speechbubble-guest{
+        height: 160px;
+    }
+}
+
+@media  screen and (min-width: 1650px) {
+    #speechbubble-host{
+        height: 250px;
+    }
+    #speechbubble-guest{
+        height: 220px;
+    }
+    
+}
+
+#start-game-error {
+    margin-top: 12px;
+    height: 20px;
+}

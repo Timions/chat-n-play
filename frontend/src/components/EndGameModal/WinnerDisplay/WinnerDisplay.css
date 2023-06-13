@@ -1,0 +1,14 @@
+#endgame-modal-content{
+    background: url(../../../img/modal_background_2.png);
+    background-size: 112%;
+    background-repeat: no-repeat;
+    border-radius: 0.8rem;
+}
+
+#endgame-modal-header{
+    border-bottom: none;
+}
+
+#endgame-modal-footer{
+    border-top: none;
+}

@@ -1,0 +1,63 @@
+.slf-evaluation-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    width: 100%;
+    margin: 14px 0 14px 0;
+}
+
+/* Alle Items */
+.slf-evaluation-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+/* Category Name */
+.slf-evaluation-item-category {
+    margin: 0;
+    padding-right: 5%;
+    width: 30%;
+
+    font-weight: bold;
+    font-size: x-large;
+    text-align: right;
+}
+
+/* Username */
+.slf-evaluation-usernames-wrapper {
+    text-align: right;
+    font-size: large;
+}
+
+.slf-evaluation-username {
+    margin: 0;
+}
+
+/* Words */
+.slf-evaluation-words-wrapper {
+    flex: 0 1 40%;
+    text-align: left;
+
+    font-size: large;
+}
+
+.slf-evaluation-words {
+    margin: 0;
+}
+
+
+/* Input */
+.slf-evaluation-input-wrapper {
+    flex: 0 1 10%;
+}
+
+.noAnswer {
+    color: red;
+}
+
+/* Eigene Antwort Input */
+.slf-evaluation-own-input {
+    height: 18px;
+}

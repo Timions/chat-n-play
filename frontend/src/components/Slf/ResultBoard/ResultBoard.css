@@ -1,0 +1,66 @@
+#slf-scores-wrapper {
+    height: 100%;
+}
+
+#slf-scores-header {
+    position: absolute;
+    top: 24px;
+    left: 0;
+    right: 0;
+
+    text-align: center;
+}
+
+
+#slf-scores-main {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#slf-scores-main-title {
+    font-weight: bold;
+    font-size: x-large;
+}
+
+#slf-scores-main-scores-wrapper {
+    width: 30%;
+    max-width: 460px;
+}
+
+.slf-player-score-wrapper {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+
+    width: 100%;
+    margin: 14px;
+
+    font-size: x-large;
+}
+
+.slf-player-score-item {
+    margin: 0;
+    width: 40%;
+}
+
+#slf-scores-footer {
+    position: absolute;
+    bottom: 24px;
+    right: 0;
+    left: 0;
+
+    text-align: center;
+}
+
+#slf-scores-continue:disabled {
+    background-color: gray;
+    border-color: gray;
+}

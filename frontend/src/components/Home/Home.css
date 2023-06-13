@@ -1,0 +1,33 @@
+#startseite {
+    background: url(../../img/background_6.png), url(../../img/background_7.png) top right, url(../../img/background_8.png) 100% 720px, url(../../img/background_4.png) 0% 900px;
+    background-repeat: no-repeat;
+    background-size: 280px, 200px, 270px;
+}
+
+.footer{
+    height: 50px;
+    background-color: #474747;
+}
+
+#container-footer{
+    padding-top: 10px;
+}
+
+a {
+    color: white;
+}
+
+@media screen and (min-width: 1600px){
+    #startseite {
+        background: url(../../img/background_6.png), url(../../img/background_7.png) top right, url(../../img/background_8.png) 100% 620px, url(../../img/background_4.png) 0% 1080px;
+        background-repeat: no-repeat;
+        background-size: 330px, 200px, 270px;
+    }
+}
+
+@media screen and (max-width: 700px){
+    #startseite{
+        background: none;
+    }
+    
+}

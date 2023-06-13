@@ -1,0 +1,38 @@
+#slf-roulette-container {
+    width: 100px;
+    height: 100px;
+
+    background-color: rgb(253, 252, 253);
+    border: 1px solid rgba(253, 252, 253, 0.31);
+    box-shadow: 0px 0px 3px #474747;
+
+    display: flex;
+    align-items: center;
+}
+
+#slf-roulette {
+    overflow: hidden;
+    height: 66px;
+    width: 100%;
+}
+
+#slf-roulette-inner {
+    position: relative;
+    top: 0px;
+
+    height: auto;
+}
+
+.slf-roulette-item {
+    text-align: center;
+
+    display: block;
+    justify-content: center;
+    align-items: center;
+
+    height: 100%;
+    
+    font-family: 'Calibri';
+    font-size: 44px;
+    font-weight: bold;
+}

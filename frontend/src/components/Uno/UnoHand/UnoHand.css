@@ -1,0 +1,281 @@
+/* Hand eines Gegenspielers */
+.uno-other-hand {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+
+    width: 150px;
+    height: 100px;
+}
+
+.uno-other-card-wrapper {
+    position: relative;
+    width: 60px;
+    height: 91px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Eigene Hand */
+.uno-my-hand-wrapper {
+    position: absolute;
+    bottom: 40px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    flex-wrap: nowrap;
+}
+
+.uno-my-hand {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: nowrap;
+
+    transition: all 500ms linear;
+
+    height: 100%;
+    width: 100%;
+}
+
+.uno-my-card-wrapper {
+    position: relative;
+    width: 90px;
+    height: 136px;
+    bottom: 0px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.uno-my-card-wrapper-wide {
+    position: relative;
+    width: 250px;
+    height: 136px;
+    bottom: 0px;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.uno-small-deck-hover {
+    transition: bottom 0.1s, height 0.1s;
+}
+
+.uno-small-deck-hover:hover {
+    height: 176px;
+
+    bottom: 40px;
+    z-index: 2;
+}
+
+.uno-big-deck-hover {
+    transition: width 0.2s, height 0.1s;
+}
+
+.uno-card-ref-wrapper {
+    width: 0px;
+}
+
+.uno-rainbow-wrapper-small {
+    position: absolute;
+    width: 67px;
+    height: 98px;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC);
+}
+
+.uno-rainbow-wrapper {
+    position: absolute;
+    width: 97px;
+    height: 143px;
+
+    border-radius: 12px;
+
+    overflow: hidden;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC);
+
+}
+
+.uno-rainbow {
+    position: absolute;
+    width: 180px;
+    height: 180px;
+
+    background: conic-gradient(
+        from 0deg,
+        violet,
+        indigo,
+        blue,
+        green,
+        yellow,
+        orange,
+        red,
+        violet
+    );
+
+    animation: 4s rotate linear infinite;
+}
+
+@keyframes rotate {
+    0% {transform:rotate(0deg);}
+    100% {transform:rotate(360deg);}
+}
+
+/* bubble top - left */
+.uno-bubble-top-left {
+    position: absolute;
+    background: rgb(71, 71, 71);
+    color: white;
+    font-family: Arial;
+    font-size: 20px;
+    line-height: 63px;
+    text-align: center;
+    width: 132px;
+    height: 66px;
+    border-radius: 14px;
+    padding: 0px;
+
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.4s, visibility 0.4s, background-color 0.14s;
+}
+
+.uno-bubble-top-left:after {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 0;
+    z-index: 1;
+    border-style: solid;
+    border-color: rgb(71, 71, 71) transparent;
+    border-width: 0 16px 13px;
+    top: -13px;
+    left: 29%;
+    margin-left: -16px;
+}
+
+/* bubble top - right */
+.uno-bubble-top-right {
+    position: absolute;
+    background: rgb(71, 71, 71);
+    color: white;
+    font-family: Arial;
+    font-size: 20px;
+    line-height: 63px;
+    text-align: center;
+    width: 132px;
+    height: 66px;
+    border-radius: 14px;
+    padding: 0px;
+
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.4s, visibility 0.4s, background-color 0.14s;
+}
+
+.uno-bubble-top-right:after {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 0;
+    z-index: 1;
+    border-style: solid;
+    border-color: rgb(71, 71, 71) transparent;
+    border-width: 0 16px 13px;
+    top: -13px;
+    left: 70%;
+    margin-left: -16px;
+}
+
+/* bubble bottom - left */
+.uno-bubble-bottom-left {
+    position: absolute;
+    background: rgb(71, 71, 71);
+    color: white;
+    font-family: Arial;
+    font-size: 20px;
+    line-height: 63px;
+    text-align: center;
+    width: 132px;
+    height: 66px;
+    border-radius: 14px;
+    padding: 0px;
+
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.4s, visibility 0.4s, background-color 0.14s;
+}
+.uno-bubble-bottom-left:after {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 0;
+    z-index: 1;
+    border-style: solid;
+    border-color: rgb(71, 71, 71) transparent;
+    border-width: 13px 16px 0;
+    bottom: -13px;
+    left: 29%;
+    margin-left: -16px;
+}
+
+/* bubble bottom - right */
+.uno-bubble-bottom-right {
+    position: absolute;
+    background: rgb(71, 71, 71);
+    color: white;
+    font-family: Arial;
+    font-size: 20px;
+    line-height: 63px;
+    text-align: center;
+    width: 132px;
+    height: 66px;
+    border-radius: 14px;
+    padding: 0px;
+
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.4s, visibility 0.4s, background-color 0.14s;
+}
+.uno-bubble-bottom-right:after {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 0;
+    z-index: 1;
+    border-style: solid;
+    border-color: rgb(71, 71, 71) transparent;
+    border-width: 13px 16px 0;
+    bottom: -13px;
+    left: 70%;
+    margin-left: -16px;
+}
+
+#aabbcc {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+}

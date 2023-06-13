@@ -1,0 +1,54 @@
+#endgame-modal-content{
+    background-image: url(../../../img/modal_background_1.png);
+    background-size: 100%;
+    background-repeat: no-repeat;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    max-height: 350px;
+}
+
+
+#endgame-modal-body {
+    padding: 16px 0px 0px 0px;
+}
+
+#endgame-modal-games-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+
+    padding-bottom: 44px;
+}
+
+.endgame-modal-game {
+    height: 140px;
+
+    margin-top: 20px;
+
+    font-family: 'coffee+tea demo';
+    font-size: 28px;
+    
+    background-clip: content-box;
+    color: white;
+
+    flex: 1 0 26%;
+}
+
+.endgame-modal-game-img {
+    height: 120px;
+    margin-top: 15px;
+
+    border-radius: 0.4rem;
+    border: solid 1px #474747;
+
+    transition: all 0.1s;
+}
+
+.endgame-modal-game-img:hover {
+    margin-top: 0px;
+    height: 125px;
+    cursor: pointer;
+}

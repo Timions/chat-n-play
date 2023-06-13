@@ -1,0 +1,31 @@
+.slf-category-input-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 8px;
+
+    width: 60%;
+}
+
+.slf-category-input {
+    width: 60%;
+    min-width: 200px;
+}
+
+.slf-category-lable {
+    margin: 0;
+    width: 100%;
+
+    font-size: large;
+    color: rgb(75, 75, 75);
+}
+
+.slf-category-input-guess {
+    width: 100%;
+    padding-left: 4px;
+    font-size: x-large;
+
+    border: 1px solid rgb(126, 126, 126);
+    border-radius: 4px;
+}

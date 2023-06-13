@@ -1,0 +1,48 @@
+#nameGame{
+    font-size: xx-large;
+    margin-right: 30px;
+    padding-top: 20px;
+}
+
+#modal-create-game{
+    background-image: url(../../../../../img/modal_background_2.png);
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+
+.m-5{
+    padding-right: 19rem;
+    padding-left: 19rem;
+}
+
+#content-local-navigation{
+    margin-bottom: 0 !important;
+}
+
+.home-collapse-button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+
+    transition: all 0.25s linear;
+}
+
+.modal-title{
+    text-align: center;
+}
+
+#collapse-top{
+    margin-bottom: 30px;
+}
+
+#modal-header{
+    border-bottom: none;
+}
+
+@media screen and (max-width: 800px) {
+    .m-5{
+        padding-right: 5rem;
+        padding-left: 5rem;
+    }
+    
+}

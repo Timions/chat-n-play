@@ -1,0 +1,24 @@
+.color-selector {
+    width: 30%;
+
+    text-align: center;
+
+    display: flex;
+    flex-direction: column;
+
+    text-align: center;
+
+    font-size: 2vw;
+    color: #474747;
+
+   
+}
+
+.colors {
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-around;
+
+    height: 30%;
+}

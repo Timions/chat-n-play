@@ -1,0 +1,11 @@
+@font-face {
+    font-family: 'coffee+tea demo';
+    src: url('../src/fonts/coffeeteademo.woff') format('woff'),
+         url('../src/fonts/coffee+teademo-Regular.ttf') format('trutype');
+}
+
+@font-face {
+    font-family: 'Calibri';
+    src: url('../src/fonts/Calibri-Regular.woff') format('woff'),
+         url('../src/fonts/Calibri-Regular.ttf') format('trutype');
+}

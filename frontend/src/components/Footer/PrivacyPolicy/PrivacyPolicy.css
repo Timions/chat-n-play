@@ -1,0 +1,44 @@
+#privacy-policy{
+    height: 100%;
+}
+
+#content-privacy-policy{
+    display: flex;
+    min-height: 100%;
+    flex-direction: column;
+
+    background: url(../../../img/background_6.png),  url(../../../img/background_7.png) top right,  url(../../../img/background_8.png) 100% 580px, url(../../../img/background_4.png) 0% 600px;
+    background-repeat: no-repeat;
+    background-size: 200px;
+}
+
+#main-privacy-policy{
+    flex: 1;
+}
+
+.text-privacy-policy{
+    margin-left: 250px;
+    margin-right: 250px;
+    font-size: large;
+}
+
+#headline-privacy-policy{
+    font-size: x-large;
+}
+
+#link-privacy-policy{
+    color: blue;
+}
+
+@media screen and (max-width: 700px){
+    #content-privacy-policy{
+        background: none;
+    }
+    .text-privacy-policy{
+        margin-right: 50px;
+        margin-left: 50px;
+    }
+    .title-image-footer{
+        height: 80px;
+    }
+}

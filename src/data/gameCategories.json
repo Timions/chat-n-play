@@ -1,0 +1,26 @@
+[
+    {
+      "gameCategoryId": 0,
+      "gameCategoryName": "Brettspiele",
+      "color": "#FF3030",
+      "img": "/BannerImages/BannerBrettspiele.png",
+      "imgbg1": "/BackgroundImages/Wuerfel5.png",
+      "imgbg2": "/BackgroundImages/Spielfigur.png"
+    },
+    {
+      "gameCategoryId": 1,
+      "gameCategoryName": "Kartenspiele",
+      "color": "#00BF02",
+      "img": "/BannerImages/BannerKartenspiele.png",
+      "imgbg1": "/BackgroundImages/Spielkarte_Deko_Reverse.png",
+      "imgbg2": "/BackgroundImages/Spielkarte_Deko_8.png"
+    },
+    {
+      "gameCategoryId": 2,
+      "gameCategoryName": "Pausenspiele",
+      "color": "#0B97F0",
+      "img": "/BannerImages/BannerPausenspiele.png",
+      "imgbg1": "/BackgroundImages/ABCDE.png",
+      "imgbg2": "/BackgroundImages/Wuerfel5.png"
+    }
+  ]

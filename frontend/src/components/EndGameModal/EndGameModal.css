@@ -1,0 +1,19 @@
+/* Header */
+#endgame-modal-title {
+    font-size: 34px;
+}
+
+.endgame-modal-playername {
+    font-weight: bold;
+}
+
+/* Body */
+.endgame-modal-body-text {
+    font-size: 26px;
+    margin: 44px 0 44px 0;
+}
+
+/* Footer */
+#endgame-modal-footer {
+    justify-content: center !important;
+}

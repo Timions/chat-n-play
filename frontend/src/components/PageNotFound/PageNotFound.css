@@ -1,0 +1,23 @@
+.background{
+   background: url(../../img/background_6.png), url(../../img/background_7.png) top right, url(../../img/background_8.png)100% 560px;
+   background-repeat: no-repeat;
+   background-size: 330px, 200px;
+   height: 100%;
+}
+h2 {
+   margin-top: 40px;
+   font-family: Calibri;
+   text-align: center;
+}
+
+#error-message {
+   font-size: 4rem;
+   color: #474747;
+   margin-top: 230px;
+}
+
+.btn {
+   color: #fff;
+   background-color: #474747;
+   border-color: #474747;
+}

@@ -1,0 +1,61 @@
+.game-category-card {
+    height: 210px;
+    color: white;
+}
+
+.game-category-card:hover {
+    cursor: pointer;
+}
+
+.game-category-card-heading {
+    font-weight: 330;
+    font-size: 6.5em;
+    letter-spacing: 3px;
+    margin: 0;
+}
+
+.card-body {
+    background-color: white;
+}
+
+#banner{
+    height: 150px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 80px;
+}
+
+#backgroundimg1{
+    height: 150px;
+    float: left;
+    margin-left: 100px;
+    opacity: 70%;
+    transform: rotate(350deg);
+}
+
+#backgroundimg2{
+    height: 150px;
+    float: right;
+    margin-right: 30px;
+    opacity: 70%;
+    transform: rotate(20deg);
+}
+
+@media screen and (max-width: 800px) {
+    #banner{
+        height: 100px;
+    }
+    #backgroundimg1{
+        height: 0;
+    }
+    #backgroundimg2{
+        height: 0;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    #banner{
+        height: 70px;
+    }
+}

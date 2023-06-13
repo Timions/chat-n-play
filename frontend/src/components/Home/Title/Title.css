@@ -1,0 +1,17 @@
+#titleWrapper {
+    background-color: #474747;
+}
+
+#title {
+    color: white;
+    font-family: 'coffee+tea demo','Calibri';
+    text-align: center;
+    margin-bottom: .0rem;
+}
+
+#logo-title {
+    position:absolute;
+    left: 10px;
+    height: 40px;
+    width: 40px;
+}

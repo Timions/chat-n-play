@@ -1,0 +1,38 @@
+#titleWrapper {
+    background-color: #474747;
+    height: 100px;
+}
+
+#title {
+    color: white;
+    font-family: 'coffee+tea demo';
+    text-align: center;
+    margin-bottom: .0rem;
+}
+
+#logo {
+    position:absolute;
+    left: 14px;
+    height: 70px;
+    width: 70px;
+}
+
+#title-grafik{
+    height: 80px;
+}
+
+@media screen and (max-width:650px){
+
+    #title-grafik{
+        height: 45px;
+    }
+    #logo{
+        height: 40px;
+        width: 40px;
+    }
+    #titleWrapper {
+        height: 80px;
+    }
+    
+}
+

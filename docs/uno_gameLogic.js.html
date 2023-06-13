@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: uno/gameLogic.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: uno/gameLogic.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>
+const { getPlayer, getPlayersInRoom } = require('../models/players');
+const { getRoom } = require('../models/rooms');
+const { Deck } = require('./Cards/Deck');
+const { Hand } = require('./Cards/Hand');
+
+// Modolo bug fix
+const mod = (n, m) => {
+    return ((n % m) + m) % m;
+  }
+
+const initUno = (hostId, socket, io) => {
+    const player = getPlayer(hostId);
+
+    // Falls der Spieler in keinem Raum ist
+    if(player === undefined) return;
+
+    // Raum des Spiels bekommen
+    const room = getRoom(player.roomId);
+
+    // Falls der Spieler in keinem Raum ist
+    if(room === undefined) return;
+
+    // Neue Attribute für den Raum setzten
+
+    // Das Kartendeck
+    let deck = new Deck();
+    deck.shuffle();
+
+    room['deck'] = deck;
+
+    // Die aktuell oberste abgelegte Karte
+    room['cardOnBoard'] = 0;
+
+    // Wenn die Richtung umgedreht wird
+    room['isReverse'] = false;
+
+    /**
+     * Wenn sich eine Farbe gewünscht wird
+     * 
+     * 0 = blau
+     * 1 = rot
+     * 2 = orange
+     * 3 = grün
+     */
+    room['nextColor'] = -1;
+
+    // Ob der Spieler aussetzen muss
+    room['isSkip'] = false;
+
+    // Wenn sich jemand eine Farbe aussgesucht hat
+    room['customColor'] = false;
+
+    // Wenn +2 oder +4 Karten gelegt werden -> aufaddieren
+    room['cardsCount'] = 0;
+
+    // bei der Klopf Karte, wie oft jeder geklopft hat
+    room['klopfValues'] = [0, 0];
+
+    // Der aktuelle Spieler
+    room['activePlayer'] = 0;
+
+    /**
+     * Der Nächste Input der erwartet wird
+     * 
+     * 1 = Karte ablegen
+     * 2 = +2
+     * 3 = +4
+     * 4 = Klopf Klopf
+     * 5 = Auf Farben input warten (von +4 Karte)
+     * 6 = Auf Farben input warten (von Farbwahl Karte)
+     * 7 = Klopf input warten (Spieler 1)
+     * 8 = Klopf input warten (Spieler 2)
+     */
+    room['moveType'] = 1;
+
+    // Jedem Spieler 7 Karten geben
+    const players = getPlayersInRoom(player.roomId);
+
+    // Wenn Raum mitlerweile gelöscht wurde
+    if(players === undefined) return;
+
+    // Die Hand erstellen
+    for(let player of players) {
+        player['hand'] = new Hand();
+
+        // Ob man klopfklopf gesagt / gedrückt hat wenn man nur noch eine Karte oder 2 hat.
+        player['klopfKlopf'] = false;
+
+        player['didDrawCard'] = false;
+
+    }
+
+    const dealHandCards = () => {
+        setTimeout(() => {
+            // Nächster Spieler
+            let nextPlayer = getNextPlayer(room.roomId);
+
+            // Falls Raum geschlossen wurde
+            if(nextPlayer === undefined) return;
+
+            // Alle Karten verteilt
+            if(nextPlayer.hand.getHandSize() === 7) {
+                setFirstPlayer(room, io);
+
+            // Weitere Karte verteilen
+            } else {
+
+                // Karte aussuchen &amp; verteilen => emit
+                dealCard(io, room, nextPlayer);
+
+                // Weitere Karten verteilen
+                dealHandCards();
+            }
+
+        }, 300);
+    }
+
+    // Kurze Pause bevor das Spiel startet
+    setTimeout(() => {
+        dealHandCards();
+    }, 1500);
+}
+
+const dealCard = (io, room, player, normalTurn) => {
+
+    // Hand Karten verteilen
+    let card = room.deck.takeCard();
+    player.hand.addCard(card);
+
+    // Sich selber die Karte schicken
+    io.to(player.socketId).emit('uno:deal-card', { card: card, socketId: player.socketId, normalTurn: normalTurn });
+
+    // Den anderen die Karte schicken (Nur ohne Wert)
+    (io.sockets.sockets.get(player.socketId)).to(room.roomId).emit('uno:deal-card', { card: { id: card.id, path: '-1.png' }, socketId: player.socketId });
+        
+}
+
+const setFirstPlayer = (room, io) => {
+
+    setTimeout(() => {
+        let players = getPlayersInRoom(room.roomId);
+
+        // Zufällig den ersten Spieler auswählen
+        let firstPlayer = players[Math.floor(Math.random() * players.length)];
+
+        firstPlayer.active = true;
+
+        // Aktiven Spieler speichern
+        room.activePlayer = { socketId: firstPlayer.socketId, position: firstPlayer.position };
+
+        // Allen Spielern die SocketId des nächsten Spielers schicken
+        io.in(firstPlayer.roomId).emit('uno:set-first-player', { socketId: firstPlayer.socketId });
+
+        setTimeout(() => {
+            setFirstCard(io, room);
+
+        }, 5000);
+    }, 1000);
+}
+
+const setFirstCard = (io, room) => {
+
+    // Karte vom Deck nehmen
+    let card = room.deck.takeCard();
+    room.cardOnBoard = card;
+
+    // socketId = 0 heißt, dass die Karte vom kartenstapel kommt (Für die Animation wichtig)
+    // Sonst handelt es sich hierbei um eine SocketId um die Animation richtig abzuspielen
+    io.in(room.roomId).emit('uno:deal-card', { card: card, socketId: 0 });
+
+    setTimeout(() => {
+        // Wenn es sich um eine Spezial Karte handelt -> neue Karte legen
+        if(card.isSpecial()) {
+            setFirstCard(io, room);
+
+        // Sonst kann der erste Spieler anfangen zu Spielen
+        }
+
+    }, 1200);
+}
+
+// Reihnfolge der Positionen
+const order = [0, 2, 1, 3]
+
+const getNextPlayer = (roomId) => {
+    
+    const room = getRoom(roomId);
+
+    // Falls Raum geschlossen
+    if(room === undefined) return;
+
+    // Ob die Reihnfolge zurzeit umgekehrt ist
+    let isReverse = room.isReverse;
+
+    // Alle Spieler
+    const players = getPlayersInRoom(roomId);
+
+    let currentPosition;
+
+    // Den Aktuell aktiven Spieler hohlen
+    let activePlayer = room.activePlayer;
+
+    // Position des Spielers
+    currentPosition = activePlayer.position;
+
+    // Position des Spielers im Array
+    let orderIndex = order.findIndex(p => p === currentPosition);
+
+    // Normale Reihnfolge
+    if(!isReverse) {
+
+        // Man kann nicht einfach die nächste Position nehmen, da ein Spieler disconnectet sein kann.
+        // Nach dem Start des Spiels akualisieren sich die Positionen nicht mehr
+        for(let i = orderIndex + 1; i &lt; orderIndex + 5; i++) {
+            let newOrderIndex = i % 4;
+            let newPosition = order[newOrderIndex];
+
+            let newPlayerIndex = players.findIndex(p => p.position === newPosition);
+            
+            // Nächster Spieler wurde gefunden
+            if(newPlayerIndex !== -1) {
+                let newPlayer = players[newPlayerIndex];
+
+                // TODO: Vlt ganzen Spieler abspeichern
+                room.activePlayer = { socketId: newPlayer.socketId, position: newPlayer.position };
+                return newPlayer;
+            }
+        }
+
+    // umgekehrt Reihnfolge
+    } else {
+
+        // Man kann nicht einfach die nächste Position nehmen, da ein Spieler disconnectet sein kann.
+        // Nach dem Start des Spiels akualisieren sich die Positionen nicht mehr
+        for(let i = orderIndex - 1; i > orderIndex - 5; i--) {
+            let newOrderIndex = mod(i, 4);
+
+            let newPosition = order[newOrderIndex];
+
+            let newPlayerIndex = players.findIndex(p => p.position === newPosition);
+
+            // Nächster Spieler wurde gefunden
+            if(newPlayerIndex !== -1) {
+                let newPlayer = players[newPlayerIndex];
+
+                // TODO: Vlt ganzen Spieler abspeichern
+                room.activePlayer = { socketId: newPlayer.socketId, position: newPlayer.position };
+                return newPlayer;
+            }
+        }
+    }
+}
+
+const setNextPlayer = (io, roomId, callback) => {
+    let nextPlayer;
+
+    nextPlayer = getNextPlayer(roomId);
+    
+    // Falls Raum geschlossen wurde
+    if(nextPlayer === undefined) return;
+
+    let room = getRoom(roomId);
+
+    // Spieler muss aussetzten
+    if(room.isSkip === true) {
+        nextPlayer = getNextPlayer(roomId);
+
+        // Falls Raum geschlossen wurde
+        if(nextPlayer === undefined) return;
+
+        room.isSkip = false;
+        room.moveType = 1;
+    }
+
+    nextPlayer.active = true;
+    nextPlayer.didDrawCard = false;
+
+    io.in(roomId).emit('uno:set-next-player', { socketId: nextPlayer.socketId, position: nextPlayer.position, isReverse: room.isReverse });
+
+    // Callback um danach den MoveStatus zu ändern
+    if(callback !== undefined) {
+        callback();
+    }
+}
+
+module.exports = { initUno, getNextPlayer, setNextPlayer, dealCard }</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="players.html">players</a></li><li><a href="rooms.html">rooms</a></li></ul><h3>Global</h3><ul><li><a href="global.html#colors">colors</a></li><li><a href="global.html#roomLetters">roomLetters</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Mon Jun 21 2021 14:14:32 GMT+0200 (GMT+02:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

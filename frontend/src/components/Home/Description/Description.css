@@ -1,0 +1,109 @@
+#home-description {
+    padding: 2%;
+}
+
+#home-description-wrapper {
+    margin: auto;
+    color: #474747;
+}
+
+#home-description-wrapper h2 {
+    font-size: 2em;
+    margin-bottom: 30px;
+}
+
+#home-description-wrapper p {
+    font-size: 1.0em;
+}
+
+#home-description-join-game-btn {
+    margin-top: 4%;
+    font-size: 0.8em;
+}
+
+#join-game-accept-btn {
+    margin-top: 40px;
+    margin-bottom: 20px;
+}
+
+#modal-join-game{
+    background-image: url(../../../img/modal_background_2.png);
+    background-size: 110%;
+    background-repeat: no-repeat;
+}
+
+.btn {
+    color: #fff;
+    background-color: #474747;
+    border-color: #474747;
+}
+
+#img-Startseite {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 150px;
+}
+
+body {
+    font-family: 'Calibri';
+}
+
+#modal-header{
+    border-bottom: none;
+}
+
+#note-smartphone-user{
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+@media screen and (min-width: 720px){
+    #img-Startseite{
+        height: 180px;
+    }
+    #home-description-wrapper h2{
+        font-size: 2,5em;
+    }
+    #home-description-wrapper p {
+        font-size: 1.0em;
+    }
+}
+
+@media screen and (min-width: 1024px){
+    #img-Startseite{
+        height: 200px;
+    }
+    #home-description-wrapper h2{
+        font-size: 3em;
+    }
+    #home-description-wrapper p {
+        font-size: 1.0em;
+    }
+}
+
+@media screen and (min-width: 1200px){
+    #img-Startseite{
+        height: 300px;
+    }
+    #home-description-wrapper h2{
+        font-size: 3em;
+    }
+    #home-description-wrapper p {
+        font-size: 1.2em;
+    }
+}
+
+
+@media screen and (min-width: 1800px){
+    #img-Startseite{
+        height: 400px;
+    }
+    #home-description-wrapper h2{
+        font-size: 4em;
+    }
+    #home-description-wrapper p {
+        font-size: 1.6em;
+    }
+}

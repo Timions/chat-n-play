@@ -1,0 +1,67 @@
+/* Wrapper für Uno Karten */
+.uno-card {
+    position: absolute;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 90px;
+    height: 136px;
+}
+
+.uno-card-small {
+    position: absolute;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 60px;
+    height: 91px;
+}
+
+.uno-card-wide {
+    position: absolute;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 250px;
+    height: 136px;
+
+    background-color: chartreuse;
+}
+
+.uno-card-back, .uno-card-front {
+    position: absolute;
+    width: 100%;
+    transform: rotateX(0deg);
+
+    backface-visibility: hidden;
+}
+
+.uno-card-back img, .uno-card-front img {
+    width: 100%;
+}
+
+.uno-card-hidden {
+    transform: rotateY(180deg);
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+.uno-card-animate {
+    position: absolute;
+
+    transform-style: preserve-3d;
+
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

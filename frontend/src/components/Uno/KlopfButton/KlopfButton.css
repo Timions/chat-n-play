@@ -1,0 +1,69 @@
+#uno-last-card-btn-wrapper {
+    position: absolute;
+}
+
+#uno-last-card-btn {
+    display: none;
+}
+
+#uno-last-card-label {
+    display: block;
+    position: relative;
+    width: 60px;
+    height: 45px;
+    border-radius: 25%;
+    margin-top: 13px;
+    background-image: linear-gradient(to right, rgb(54, 54, 54) 0%,
+                                                rgb(80, 80, 80) 20%,
+                                                rgb(83, 83, 83) 80%,
+                                                rgb(104, 104, 104) 100%);
+    box-shadow: 0 2px 10px rgba(0, 0, 31, 0.75);
+    cursor: pointer;
+    transition: all 0.4s ease;
+}
+
+#uno-last-card-label:hover {    
+    filter: brightness(1.125);
+}
+
+#uno-last-card-label:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: inherit;
+    height: inherit;
+    border-radius: inherit;
+    transform: translateY(-13px);
+    transition-duration: 125ms;
+    transition-delay: 125ms;
+
+    content: 'Klopf';
+    font-size: larger;
+    font-weight: bold;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+}
+
+.uno-last-card-btn-half-pressed ~ #uno-last-card-label {
+    margin-top: 10px;
+}
+
+.uno-last-card-btn-pressed:checked ~ #uno-last-card-label:after {
+    transform: translateY(-4px);
+    background-color: rgb(161, 161, 161);
+    transition-duration: 125ms;
+    transition-delay: initial;
+}
+
+.uno-last-card-btn-pressed:checked ~ #uno-last-card-label:active {
+    box-shadow: 0 1px 1px 2px rgba(7, 15, 32, 0.75);
+}
+
+.uno-last-card-btn-pressed ~ #uno-last-card-label:active::after {
+    transform: translateY(-1px);
+}

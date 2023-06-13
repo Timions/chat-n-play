@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: slf/gameLogic.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: slf/gameLogic.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>const { getRoom } = require('../models/rooms');
+const { getPlayersInRoom, getPlayer } = require('../models/players');
+
+/**
+ * {roomId, [alphabet]}
+ */
+const roomLetters = []
+
+
+const initilazeGame = (roomId, categories, rounds) => {
+    const alphabet = [...'abcdefghijklmnopqrstuvwxyz'];
+    roomLetters.push({ roomId, alphabet });
+
+    // Raum weiter Attribute hinzufügen
+    const room = getRoom(roomId);
+
+    room['categories'] = categories;
+    room['rounds'] = rounds;
+    room['currentRound'] = 0;
+
+    // 1: Wörter überlegen zum Buchstaben | 2: Wörter bewerten | 3: Spiel vorbei
+    room['gameStatus'] = 1;
+
+    // Alle Spieler aus dem Raum des 
+    const allPlayers = getPlayersInRoom(roomId);
+
+    // Spielern weitere Attribute hinzufügen
+    allPlayers.forEach(player => {
+        // Zusammengerechnete Punktzahl von allen Runden
+        player['score'] = 0;
+        player['lastScore'] = 0;
+        player['rank'] = 0;
+        player['words'] = []; 
+    });
+    
+    return getPlayersScores(allPlayers);
+}
+
+const chooseLetter = (roomId, callback) => {
+    const room = getRoom(roomId);
+
+    if(room['currentRound'] &lt;= room['rounds']) {
+        let letters = roomLetters.filter((item) => item.roomId === roomId)[0].alphabet;
+        let index = Math.floor(Math.random() * letters.length);
+        
+        let choosenLetter = letters[index];
+        letters.splice(index, 1);
+
+        // Die Wörter aus der letzten Runde löschen
+        room['currentWords'] = [];
+
+        // Wird auf true gesetzt, wenn die Wörter bewertet werden
+        room.gameStatus = 1;
+
+        // Der in der aktuellen Runde benutzter Buchstabe
+        room['currentLetter'] = choosenLetter;
+
+        // Welche  Spieler die Bewertungen zu den Wörtern abgegeben haben
+        room['readyPlayers'] = [];
+
+        setTimeout(() => {
+            callback(choosenLetter);
+    
+        }, 1000);
+    }
+
+    return;
+}
+
+
+const submitWords = (socketId, words, allSubmittedCallback) => {
+    const player = getPlayer(socketId);
+    const room = getRoom(player.roomId);
+
+    let result = { socketId, words: [] };
+
+    words.forEach((word) => {
+        result.words.push({ word: word, votes: 0 });
+    });
+
+    player['words'][room.currentRound] = words;
+    room['currentWords'].push(result);
+
+    const playerNum = getPlayersInRoom(room.roomId).length;
+
+    if(playerNum == room['currentWords'].length) {
+        room.gameStatus = 2;
+        allSubmittedCallback(room['currentWords'], room['currentLetter']);
+    }
+}
+
+
+const removePlayerWordsFromCurrentRound = (player) => {
+    const room = getRoom(player.roomId);
+
+    let currentWords = room['currentWords'];
+    let playerWordsIndex = currentWords.findIndex(entry => entry.socketId === player.socketId);
+
+    currentWords.splice(playerWordsIndex, 1)
+
+    return currentWords;
+}
+
+
+const submitVotes = (player, results, callback) => {
+    const room = getRoom(player.roomId);
+
+    // Bewertung noch nicht abgegeben
+    if(room.readyPlayers.find(socketId => socketId === player.socketId) === undefined) {
+        room.readyPlayers.push(player.socketId);
+
+        callback({ readyPlayers: room.readyPlayers });
+
+        // Wörter Bewertung speichern
+        let currentWords = room.currentWords;
+        
+        // Ob das Ergebniss im richtigen Format kommt
+        if(results.length === room.categories.length) {
+            for(let categoryIndex in results) {
+
+                // Ob das Ergebniss im richtigen Format kommt
+                if(results[categoryIndex].answers.length === currentWords.length - 1) {
+
+                    // SocketId (Für wen die Bewertung ist), Bewertung
+                    let votes = results[categoryIndex].answers.map((player) => {
+                        if(player.votes > 0) {
+                            return { socketId: player.socketId, votes: 1 }
+
+                        } else {
+                            return { socketId: player.socketId, votes: 0 }
+
+                        }
+                    }); 
+
+                    // Alle Bewertungen für eine Kategorie
+                    for(let vote of votes) {
+                        let p = currentWords.find(entry => entry.socketId === vote.socketId);
+
+                        if(p !== undefined) {
+                            p.words[categoryIndex].votes += vote.votes;
+                        }
+                    }
+                }
+            }
+
+            // Sich selber +1 geben
+            let p = currentWords.find(entry => entry.socketId === player.socketId);
+
+            if(p !== undefined) {
+                for(let entry of p.words) {
+                    entry.votes += 1;
+
+                }
+            }
+        }
+
+        return checkAllSubmitted(room);
+
+    } else {
+        // Bewertung schon abgegeben
+        callback({ readyPlayers: room.readyPlayers.length });
+    }
+
+    return false;
+}
+
+
+const checkAllSubmitted = (room) => {
+    // Wie viele Spieler im Spiel
+    let allPlayers = getPlayersInRoom(room.roomId);
+
+    // Wenn letzter Spieler der das Ergebnis abgegeben hat
+    if(room.readyPlayers.length === allPlayers.length) {
+
+        // Wörter werden nun ausgewertet
+        room.gameStatus = 2;
+
+        addVotes(room);
+        return true;
+    }
+
+    return false;
+}
+
+
+const addVotes = (room) => {
+
+    let numPlayers = getPlayersInRoom(room.roomId).length;
+    let result = [];
+
+    for(let i=0; i &lt; room.categories.length; i++) {
+        result.push([]);
+    }
+
+    // Alle Wörter gleich machen (toLowerCase, Punkte etc rausfiltern)  
+    for(let playerAnswers of room.currentWords) {
+        for(let wordIndex in playerAnswers.words) {
+
+            // Word nur nehmen, wenn genug votes
+            if(playerAnswers.words[wordIndex].votes / numPlayers > 0.5) {
+                playerAnswers.words[wordIndex] = playerAnswers.words[wordIndex].word.toLowerCase();
+
+                // Umlaute
+                playerAnswers.words[wordIndex] = playerAnswers.words[wordIndex].replace('ü', 'ue').replace('ä', 'ae').replace('ö', 'oe');
+
+                // Special Characters rausfiltern
+                playerAnswers.words[wordIndex] = playerAnswers.words[wordIndex].replace(/[^a-zA-Z0-9]+/g, '')
+
+                result[wordIndex].push([playerAnswers.socketId, playerAnswers.words[wordIndex]]);
+
+            } else {
+                result[wordIndex].push([playerAnswers.socketId, null]);
+
+            }
+        }
+    }
+    
+    room.currentWords = result;
+}
+
+const calculateScore = (room) => {
+
+    // Spiel Status updaten
+    room.gameStatus = 3;
+
+    for(let categoryAnswers of room.currentWords) {
+        for(let answer of categoryAnswers) {
+            let player = getPlayer(answer[0]);
+            let nullCounter = 0;
+            let scored = false;
+
+            // Eigenes Wort ist null -> keine Punkte
+            if(answer[1] === null) {
+                continue;
+            }
+
+            for(let otherAnswer of categoryAnswers) {
+
+                // Eigene Antwort nicht bachten
+                if(answer[0] !== otherAnswer[0]) {
+
+                    // gleiche Antwort
+                    if(answer[1] === otherAnswer[1]) {
+                        player.lastScore += 5;
+
+                        scored = true;
+                        break;
+
+                    // Counter hochzählen wenn vergleichswort null ist. später prüfen ob alle anderen auchnull waren
+                    } else {
+                        if(otherAnswer[1] === null) {
+                            nullCounter++;
+                        }
+                    }
+                
+                // Vergleichswort ist eigenes Wort
+                } else {
+                    continue;
+
+                }
+            }
+
+            // Wenn man bisher keinen Punkt bekommen hat
+            if(!scored) {
+
+                // Einziger in einer Kategorie
+                if(nullCounter === (categoryAnswers.length - 1)) {
+                    player.lastScore += 20;
+
+                // Alleine ein Wort
+                } else {
+                    player.lastScore += 10;
+
+                }
+            }
+        }
+    }
+
+    let allPlayers = getPlayersInRoom(room.roomId);
+
+    //  { socketId, score }
+    let scoreResults = [];
+
+    for(let p of allPlayers) {
+        scoreResults.push({ socketId: p.socketId, score: p.lastScore });
+    }
+
+    // resetten
+    room.readyPlayers = [];
+
+    return scoreResults;
+}
+
+const getPlayersScores = (allPlayers) => {
+
+    // Sotieren nach scores
+    allPlayers.sort(function (a, b) {
+        return b.score - a.score;
+    });
+
+    let playerTmp;
+    let rankCounter = 1
+
+    for(let p of allPlayers) {
+
+        if(playerTmp === undefined) {
+            p.rank = rankCounter;
+
+        } else {
+            // Wenn gleicher score wie vorheriger Spieler => gleicher Rank
+            if(playerTmp.score === p.score) {
+                p.rank = playerTmp.rank;
+
+            } else {
+                p.rank = rankCounter;
+
+            }
+        }
+
+        playerTmp = p;
+        rankCounter++;
+    }
+
+    return allPlayers.map((player) => {
+        let playerObj = { username: player.username, score: player.score, rank: player.rank };
+        
+        return playerObj;
+    });
+}
+
+module.exports = { initilazeGame, chooseLetter, submitWords, addVotes, removePlayerWordsFromCurrentRound, submitVotes, calculateScore, getPlayersScores };</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="players.html">players</a></li><li><a href="rooms.html">rooms</a></li></ul><h3>Global</h3><ul><li><a href="global.html#colors">colors</a></li><li><a href="global.html#roomLetters">roomLetters</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.7</a> on Mon Jun 21 2021 14:14:32 GMT+0200 (GMT+02:00)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
