@@ -1,5 +1,7 @@
 # Web Application with Mini Games
 
+https://www.hdm-stuttgart.de/mediathek/projectpage/3600/details
+
 This is a web application that offers a collection of mini games for users to enjoy. It also provides various communication options, including text chat, audio chat, and video chat, allowing users to interact with each other while playing the games.
 
 ## Table of Contents
